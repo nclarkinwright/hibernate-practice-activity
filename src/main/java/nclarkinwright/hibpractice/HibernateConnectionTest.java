@@ -8,15 +8,15 @@ public class HibernateConnectionTest {
 
 	public static void main(String[] args) {
 		// Create session factory
-				SessionFactory factory = new Configuration()
-											.configure("hibernate.cfg.xml")
-											.buildSessionFactory();
+		SessionFactory factory = new Configuration()
+									.configure("hibernate.cfg.xml")
+									.buildSessionFactory();
 				
-				Session session = factory.getCurrentSession();
+		Session session = factory.getCurrentSession();
 				
-				System.out.println("Is connected: " + session.toString());
+		System.out.println("Is connected: " + session.toString());
 				
-				factory.close();
+		factory.close();
 
 	}
 
