@@ -2,47 +2,92 @@ package nclarkinwright.hibpractice;
 
 import java.util.Scanner;
 
-import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
+import nclarkinwright.hibpractice.db.EmployeeDb;
+import nclarkinwright.hibpractice.domain.Employee;
 
 public class HibernatePractice {
-
+	
+	Scanner scanner;
+	EmployeeDb employeeDb;
+	
+	public HibernatePractice(String hibernateXmlPath) {
+		scanner = new Scanner(System.in);
+		employeeDb = new EmployeeDb(hibernateXmlPath);
+	}
+	
 	public static void main(String[] args) {
-		
-		// Create current session for application
-		SessionFactory factory = new Configuration()
-				.configure("hibernate.cfg.xml")
-				.buildSessionFactory();
 
-		// Session session = factory.getCurrentSession();
+		// Employee database path
+		String hibernateXmlPath = "hibernate.cfg.xml";
 		
-		// Run simple CLI for user
-		Scanner scanner = new Scanner(System.in);
+		HibernatePractice hibPract = new HibernatePractice(hibernateXmlPath);
 		
 		while (true) {
 			printPrompt();
-			String command = scanner.nextLine();
+			String command = hibPract.scanner.nextLine().toLowerCase();
 			
-			if (command.toLowerCase().equals("quit")) {
+			if (command.equals("quit")) {
 				break;
+			} else if (command.equals("add")) {
+				hibPract.addEmployee();
+			} else if (command.equals("find")) {
+				hibPract.findById();
 			} else {
 				System.out.println("\nUnknown command");
 			}
 		}
 		
-		scanner.close();
-		factory.close();
+		hibPract.scanner.close();
+		hibPract.employeeDb.close();
 	}
 
 	private static void printPrompt() {
 		System.out.print("\nAdd - Add an employee\n"
-				+ "Retrieve - Retrieves employee info by id\n"
+				+ "Find - Retrieves employee info by id\n"
 				+ "Query - Search for employees\n"
 				+ "Delete - delete an employee\n"
 				+ "Quit - End the program\n"
 				+ "Enter command > ");
 	}
 	
+	private void addEmployee() {
+		System.out.print("\nEmployee's first name: ");
+		String firstName = scanner.nextLine();
+		System.out.print("\nEmployee's last name: ");
+		String lastName = scanner.nextLine();
+		System.out.print("\nEmployee's company: ");
+		String company = scanner.nextLine();
+		
+		Employee employee = new Employee(firstName, lastName, company);
+		
+		try {
+			employeeDb.createEntry(employee);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 	
+	private void findById() {
+		boolean numberNotEntered = true;
+		int id = 0;
+		
+		while (numberNotEntered) {
+			System.out.print("\nEnter id#: ");
+			try {
+				id = Integer.valueOf(scanner.nextLine());
+			} catch (NumberFormatException Nfe) {
+				System.out.println("\nNot a number");
+			} finally {
+				numberNotEntered = false;
+			}
+		}
+		
+		try {
+			System.out.println(employeeDb.findById(id));
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
 
 }
