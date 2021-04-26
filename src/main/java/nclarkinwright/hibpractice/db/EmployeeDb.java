@@ -63,5 +63,14 @@ public class EmployeeDb {
 		return employees;
 	}
 	
+	public void deleteEntry(int id) {
+		Session session = factory.getCurrentSession();
+		session.beginTransaction();
+		
+		Employee employee = session.get(Employee.class, id);
+		session.delete(employee);
+		
+		session.getTransaction().commit();
+	}
 	
 }

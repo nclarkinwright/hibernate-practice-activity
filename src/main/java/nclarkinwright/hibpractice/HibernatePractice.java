@@ -36,6 +36,8 @@ public class HibernatePractice {
 				hibPract.findById();
 			} else if (command.equals("query")) {
 				hibPract.query();
+			} else if (command.equals("delete")) {
+				hibPract.delete();
 			} else {
 				System.out.println("\nUnknown command");
 			}
@@ -88,6 +90,30 @@ public class HibernatePractice {
 			System.out.println("\nEmployees found:");
 			employeesFound.forEach(System.out::println);
 		}
+	}
+	
+	private void delete() {
+		boolean numberNotEntered = true;
+		int id = 0;
+		
+		while (numberNotEntered) {
+			System.out.print("\nEnter id#: ");
+			try {
+				id = Integer.valueOf(scanner.nextLine());
+			} catch (NumberFormatException Nfe) {
+				System.out.println("\nNot a number");
+			} finally {
+				numberNotEntered = false;
+			}
+		}
+		
+		try {
+			employeeDb.deleteEntry(id);
+			System.out.println("\nDeleted");
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		
 	}
 	
 	private void findById() {
