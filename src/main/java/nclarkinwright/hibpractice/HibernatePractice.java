@@ -1,5 +1,7 @@
 package nclarkinwright.hibpractice;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 import nclarkinwright.hibpractice.db.EmployeeDb;
@@ -32,6 +34,8 @@ public class HibernatePractice {
 				hibPract.addEmployee();
 			} else if (command.equals("find")) {
 				hibPract.findById();
+			} else if (command.equals("query")) {
+				hibPract.query();
 			} else {
 				System.out.println("\nUnknown command");
 			}
@@ -67,6 +71,25 @@ public class HibernatePractice {
 		}
 	}
 	
+	private void query() {
+		System.out.print("Enter text to search for: ");
+		String search = scanner.nextLine();
+		
+		List<Employee> employeesFound = new ArrayList<>();
+		try {
+			employeesFound = employeeDb.query(search);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		if (employeesFound.isEmpty()) {
+			System.out.println("\nNo employees found.");
+		} else {
+			System.out.println("\nEmployees found:");
+			employeesFound.forEach(System.out::println);
+		}
+	}
+	
 	private void findById() {
 		boolean numberNotEntered = true;
 		int id = 0;
@@ -87,7 +110,6 @@ public class HibernatePractice {
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
-		
 	}
 
 }

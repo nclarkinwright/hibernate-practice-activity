@@ -1,5 +1,10 @@
 package nclarkinwright.hibpractice.db;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.Query;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
@@ -40,6 +45,22 @@ public class EmployeeDb {
 		session.save(employee);
 		
 		session.getTransaction().commit();
+	}
+
+	public List<Employee> query(String search) {
+		Session session = factory.getCurrentSession();
+		session.beginTransaction();
+		
+		String hql = "FROM Employee e WHERE e.firstName=?1 OR e.lastName=?2 OR e.company=?3";
+		Query query = session.createQuery(hql);
+		query.setParameter(1, search);
+		query.setParameter(2, search);
+		query.setParameter(3, search);
+		List<Employee> employees = query.getResultList();
+		
+		session.getTransaction().commit();
+		
+		return employees;
 	}
 	
 	
